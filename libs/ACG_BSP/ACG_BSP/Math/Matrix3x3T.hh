@@ -6,6 +6,7 @@
 #include <ACG_BSP/Math/VectorT.hh>
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <utility>
 
 #if defined(_MSC_VER) && _MSC_VER < 1900
