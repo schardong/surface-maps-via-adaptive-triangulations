@@ -40,12 +40,50 @@ option(GLFW_INSTALL "" OFF)
 # Find packages
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-find_package(OpenMP REQUIRED)
+# Outside MacOS, let CMake locate OpenMP (creates the OpenMP::OpenMP_CXX target)
+if(NOT APPLE)
+  find_package(OpenMP REQUIRED)
+endif()
+
+# gschardong: OpenMP flags on MacOS
+if(APPLE)
+  if(CMAKE_C_COMPILER_ID MATCHES "Clang")
+    set(OpenMP_C "${CMAKE_C_COMPILER}" CACHE STRING "" FORCE)
+    set(OpenMP_C_FLAGS "-L/opt/homebrew/opt/libomp/lib -I/opt/homebrew/opt/libomp/include -fopenmp=libomp -Wno-unused-command-line-argument" CACHE STRING "" FORCE)
+    set(OpenMP_C_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+    set(OpenMP_libomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+    set(OpenMP_libgomp_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+    set(OpenMP_libiomp5_LIBRARY ${OpenMP_C_LIB_NAMES} CACHE STRING "" FORCE)
+  endif()
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    set(OpenMP_CXX "${CMAKE_CXX_COMPILER}" CACHE STRING "" FORCE)
+    set(OpenMP_CXX_FLAGS "-L/opt/homebrew/opt/libomp/lib -I/opt/homebrew/opt/libomp/include -fopenmp=libomp -Wno-unused-command-line-argument" CACHE STRING "" FORCE)
+    set(OpenMP_CXX_LIB_NAMES "libomp" "libgomp" "libiomp5" CACHE STRING "" FORCE)
+    set(OpenMP_libomp_LIBRARY ${OpenMP_CXX_LIB_NAMES} CACHE STRING "" FORCE)
+    set(OpenMP_libgomp_LIBRARY ${OpenMP_CXX_LIB_NAMES} CACHE STRING "" FORCE)
+    set(OpenMP_libiomp5_LIBRARY ${OpenMP_CXX_LIB_NAMES} CACHE STRING "" FORCE)
+  endif()
+endif()
+
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+#-L/opt/homebrew/opt/libomp/lib -I/opt/homebrew/opt/libomp/include
+
 
 # ===============================================
 # Add submodules
 
 add_subdirectory(libs/OpenMesh)
+
+# gschardong: Making CMake use our thread library
+IF(APPLE)
+    set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+    set(CMAKE_HAVE_THREADS_LIBRARY 1)
+    set(CMAKE_USE_WIN32_THREADS_INIT 0)
+    set(CMAKE_USE_PTHREADS_INIT 1)
+    set(THREADS_PREFER_PTHREAD_FLAG ON)
+ENDIF()
 
 # Supress an OpenMesh warning
 if (${QT_QMAKE_EXECUTABLE})
