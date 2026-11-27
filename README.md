@@ -16,7 +16,7 @@ The repository contains:
 
 This project has been developed and tested on Linux (Debian & Ubuntu) and requires a C++17 compiler. Install the dependencies via:
 ```
-sudo apt install cmake libgl1-mesa-dev mesa-utils libglfw3 libglfw3-dev libxinerama-dev libxcursor-dev libxi-dev g++
+sudo apt install cmake libgl1-mesa-dev mesa-utils libglfw3 libglfw3-dev libxinerama-dev libxcursor-dev libxi-dev g++ bingold-utils
 ```
 
 Clone and build the project using the following commands:
@@ -49,9 +49,9 @@ Viewer navigation:
 Press Escape to close the window. Some demos will open several windows in succession.
 
 # Authors
-* [Patrick Schmidt](https://www.graphics.rwth-aachen.de/person/232/)  
+* [Patrick Schmidt](https://www.graphics.rwth-aachen.de/person/232/)
 * Dörte Pieper
-* [Leif Kobbelt](https://www.graphics.rwth-aachen.de/person/3/)  
+* [Leif Kobbelt](https://www.graphics.rwth-aachen.de/person/3/)
 
 # Citation
 ```
